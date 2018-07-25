@@ -21,6 +21,14 @@ elif platform == "darwin":
 
 
 
+def timer_sec(seconds):
+    # time = int(input('Set timer to: '))
+    try:
+        t = Timer(seconds[0], time_over)
+        t.start()
+    except Exception as e:
+        print(e)
+
 def timer():
     time = int(input('Set timer to: '))
     try:

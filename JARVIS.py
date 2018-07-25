@@ -53,7 +53,7 @@ def hasNumbers(inputString):
 
 
 def findNumbers(inputString):
-    return [int(s) for s in str.split() if s.isdigit()]
+    return [int(s) for s in inputString.split() if s.isdigit()]
 
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
@@ -329,9 +329,9 @@ def assistant(command):
     elif "timer" in command:
         if(hasNumbers(command) == True):
             try:
-                print("Found numbers")
-                print(findNumbers(command))
-                Timer.timer()
+                time = findNumbers(command)
+                print(time)
+                Timer.timer_sec(time)
             except:
                 pass
         else:
