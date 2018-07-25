@@ -7,6 +7,7 @@ import bs4
 from selenium import webdriver
 from ctypes import POINTER
 import threading
+import subprocess
 import pygame
 from gtts import gTTS  # Google text-to-speech
 from selenium import webdriver
@@ -26,13 +27,15 @@ from changeSettings import changeAccent, changeDeviceName
 from YouTubeCommands import youtube, YouTubeToMp3,downloadYouTube,YouTubeCommands
 from mp3Player import playMp3
 from Google import googler
+from scripts import Timer
 import AnimationAction
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
-soundDirectory = currentDirectory + r"/sounds//"
-chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+soundDirectory = currentDirectory + "/sounds//"
+print(currentDirectory)
+chromedriverPath = currentDirectory + "/setup/chromedriver"
+setupPath = currentDirectory + "/setup"  # USE AS GLOBAL VARIABLE
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -42,6 +45,15 @@ driver.close()
 #Start mp3 player
 pygame.mixer.init()
 AnimationAction.init()
+
+
+#For timer
+def hasNumbers(inputString):
+    return any(char.isdigit() for char in inputString)
+
+
+def findNumbers(inputString):
+    return [int(s) for s in str.split() if s.isdigit()]
 
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
@@ -262,8 +274,8 @@ def stop():
 
 # --------------------------------------------------USING THE COMMANDS-----------------------------------
 # Set the current volume to medium volume
-volumeLevel = int(volume.GetMasterVolumeLevel())
-volume.SetMasterVolumeLevel(-10, None)
+# volumeLevel = int(volume.GetMasterVolumeLevel())
+# volume.SetMasterVolumeLevel(-10, None)
 
 
 def assistant(command):
@@ -311,12 +323,33 @@ def assistant(command):
     elif command == "goodbye " + deviceName:
         exit(0)
     elif 'joke' in command or "tell me a joke" in command:
+        print("Telling joke")
         joke()
+    #--------------------------------------------------------------Timer Function
+    elif "timer" in command:
+        if(hasNumbers(command) == True):
+            try:
+                print("Found numbers")
+                print(findNumbers(command))
+                Timer.timer()
+            except:
+                pass
+        else:
+            try:
+                Timer.timer()
+            except:
+                pass
+        # print("Setting timer")
+        # timer_thread = subprocess.call(["python", "scripts/Timer.py"])
+        # threading.Thread(target=timer_thread).start()
+
+    #----------------------------------------------------------------------------
     elif command not in every_command and command != "":
         if youtube_open == False:
             pass
         else:
             pass
+
     # -------------------------------------------------------------VOLUME SETTINGS
     elif "decrease volume" in command or "lower volume" in command:
         try:

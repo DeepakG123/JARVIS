@@ -4,7 +4,7 @@ import time
 import os
 
 currentDirectory = os.path.dirname(__file__).replace("scripts", "")
-chromedriverPath = currentDirectory + "\setup\chromedriver.exe"
+chromedriverPath = currentDirectory + "\setup\chromedriver"
 
 driver = chromedriverPath
 

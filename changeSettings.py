@@ -2,11 +2,17 @@ import speech_recognition as sr
 import os
 import time
 from gtts import gTTS  # Google text-to-speech
+import subprocess
+import pygame
+
+pygame.init()
 
 currentDirectory = os.path.dirname(__file__)
-soundDirectory = currentDirectory + r"/sounds//"
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+soundDirectory = currentDirectory + r"/sounds/"
+setupPath =  "/Users/deepakgoel/JARVIS/setup"  # USE AS GLOBAL VARIABLE
 deviceLanguage = ""
+
+
 with open(os.path.join(setupPath, "lang.txt"), "r") as readLang:
     deviceLanguage = readLang.readline()
 def myCommand():
@@ -29,7 +35,7 @@ def myCommand():
         except sr.UnknownValueError:
             # print("UNKNOWN")
             print("in Except")
-            command = self.myCommand()
+            command = myCommand()
     except Exception as e:
         pass
 
@@ -52,7 +58,8 @@ def changeAccent():
     tts = gTTS("What would you like to change your language to?",
                lang=deviceLanguage)
     tts.save(os.path.join(soundDirectory, "WhichLanguage.mp3"))
-    os.startfile(os.path.join(soundDirectory, "WhichLanguage.mp3"))
+    pygame.mixer.music.load(os.path.join(soundDirectory, "WhichLanguage.mp3"))
+    pygame.mixer.music.play()
 
     answer = ""
 
@@ -66,7 +73,7 @@ def changeAccent():
         langAbbrev = language.get(answer)
         # CHANGE LANGUAGE
         deviceLanguage = langAbbrev
-        langFilePath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+        langFilePath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
         with open(os.path.join(langFilePath, "lang.txt"), "w") as writeNewLang:
             writeNewLang.write(langAbbrev)
 
@@ -83,7 +90,7 @@ def changeDeviceName():
     global deviceName
     global soundDirectory
     print("NAME CHANGER")
-    soundDirectory = currentDirectory + r"\sounds\\"
+    soundDirectory = currentDirectory + r"/sounds/"
 
     tts = gTTS("What should my new name be?", lang=deviceLanguage)
     tts.save(os.path.join(soundDirectory, "NameQuestion.mp3"))
@@ -106,7 +113,7 @@ def changeDeviceName():
             os.startfile(os.path.join(soundDirectory, "NameQuestion.mp3"))
 
     # rewrite the new name.
-    newNameFilePath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+    newNameFilePath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
     with open(os.path.join(newNameFilePath, "device-name.txt"), "w") as writeNewName:
         writeNewName.write(answer)
     deviceName = answer
